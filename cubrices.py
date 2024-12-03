@@ -42,35 +42,141 @@ class Cubriz:
         ]
         return Cubriz(elements)
 
-    def inverse_ij(self):
+    def inverse_AIJ_ij(self):
         assert self.m == self.n == self.o
 
-        elements = [
-                [[1.0 / (self.elements[k-1][i-1][j-1]) if i == j else 0 for j in range(1, self.n + 1)] for i in range(1, self.m + 1)]
+        I_elements = [
+                [[kronecker_delta(i, j) * (self.elements[k-1][i-1][j-1])**(-1) for j in range(1, self.n + 1)] for i in range(1, self.m + 1)]
                 for k in range(1, self.o + 1)
         ]
 
-        return (Cubriz(elements), d_ij_cubrix(self.n))
-
-    def inverse_ik(self):
-        assert self.m == self.n == self.o
-
-        elements = [
-                [[1.0 / (self.elements[k-1][i-1][j-1]) if i == k else 0 for j in range(1, self.n + 1)] for i in range(1, self.m + 1)]
+        J_elements = [
+                [[kronecker_delta(i, j) for j in range(1, self.n + 1)] for i in range(1, self.m + 1)]
                 for k in range(1, self.o + 1)
         ]
 
-        return (Cubriz(elements), d_ik_cubrix(self.n))
+        return (Cubriz(I_elements), Cubriz(J_elements))
 
-    def inverse_jk(self):
+    def inverse_AIJ_jk(self):
         assert self.m == self.n == self.o
 
-        elements = [
-                [[1.0 / (self.elements[k-1][i-1][j-1]) if j == k else 0 for j in range(1, self.n + 1)] for i in range(1, self.m + 1)]
+        J_elements = [
+                [[kronecker_delta(j, k) * (self.elements[k-1][i-1][j-1])**(-1) for j in range(1, self.n + 1)] for i in range(1, self.m + 1)]
                 for k in range(1, self.o + 1)
         ]
 
-        return (Cubriz(elements), d_jk_cubrix(self.n))
+        I_elements = [
+                [[kronecker_delta(j, k) for j in range(1, self.n + 1)] for i in range(1, self.m + 1)]
+                for k in range(1, self.o + 1)
+        ]
+
+        return (Cubriz(I_elements), Cubriz(J_elements))
+
+    def inverse_AIJ_ik(self):
+        assert self.m == self.n == self.o
+
+        J_elements = [
+                [[kronecker_delta(i, k) * (self.elements[k-1][i-1][j-1])**(-1) for j in range(1, self.n + 1)] for i in range(1, self.m + 1)]
+                for k in range(1, self.o + 1)
+        ]
+
+        I_elements = [
+                [[kronecker_delta(i, k) for j in range(1, self.n + 1)] for i in range(1, self.m + 1)]
+                for k in range(1, self.o + 1)
+        ]
+
+        return (Cubriz(I_elements), Cubriz(J_elements))
+    
+
+    def inverse_IAJ_ij(self):
+        assert self.m == self.n == self.o
+
+        I_elements = [
+                [[kronecker_delta(i, j) * (self.elements[k-1][i-1][j-1])**(-1) for j in range(1, self.n + 1)] for i in range(1, self.m + 1)]
+                for k in range(1, self.o + 1)
+        ]
+
+        J_elements = [
+                [[kronecker_delta(i, j) * kronecker_delta(i, k) for j in range(1, self.n + 1)] for i in range(1, self.m + 1)]
+                for k in range(1, self.o + 1)
+        ]
+
+        return (Cubriz(I_elements), Cubriz(J_elements))
+
+    def inverse_IAJ_jk(self):
+        assert self.m == self.n == self.o
+
+        I_elements = [
+                [[kronecker_delta(j, k) * (self.elements[k-1][i-1][j-1])**(-1) for j in range(1, self.n + 1)] for i in range(1, self.m + 1)]
+                for k in range(1, self.o + 1)
+        ]
+
+        J_elements = [
+                [[kronecker_delta(j, k) for j in range(1, self.n + 1)] for i in range(1, self.m + 1)]
+                for k in range(1, self.o + 1)
+        ]
+
+        return (Cubriz(I_elements), Cubriz(J_elements))
+
+    def inverse_IAJ_ik(self):
+        assert self.m == self.n == self.o
+
+        J_elements = [
+                [[kronecker_delta(i, k) * (self.elements[k-1][i-1][j-1])**(-1) for j in range(1, self.n + 1)] for i in range(1, self.m + 1)]
+                for k in range(1, self.o + 1)
+        ]
+
+        I_elements = [
+                [[kronecker_delta(i, k) for j in range(1, self.n + 1)] for i in range(1, self.m + 1)]
+                for k in range(1, self.o + 1)
+        ]
+
+        return (Cubriz(I_elements), Cubriz(J_elements))
+
+    def inverse_IJA_ij(self):
+        assert self.m == self.n == self.o
+
+        I_elements = [
+                [[kronecker_delta(i, j) * (self.elements[k-1][i-1][j-1])**(-1) for j in range(1, self.n + 1)] for i in range(1, self.m + 1)]
+                for k in range(1, self.o + 1)
+        ]
+
+        J_elements = [
+                [[kronecker_delta(i, j) for j in range(1, self.n + 1)] for i in range(1, self.m + 1)]
+                for k in range(1, self.o + 1)
+        ]
+
+        return (Cubriz(I_elements), Cubriz(J_elements))
+
+    def inverse_IJA_jk(self):
+        assert self.m == self.n == self.o
+
+        I_elements = [
+                [[kronecker_delta(j, k) * (self.elements[k-1][i-1][j-1])**(-1) for j in range(1, self.n + 1)] for i in range(1, self.m + 1)]
+                for k in range(1, self.o + 1)
+        ]
+
+        J_elements = [
+                [[kronecker_delta(j, k) for j in range(1, self.n + 1)] for i in range(1, self.m + 1)]
+                for k in range(1, self.o + 1)
+        ]
+
+        return (Cubriz(I_elements), Cubriz(J_elements))
+
+    def inverse_IJA_ik(self):
+        assert self.m == self.n == self.o
+
+        J_elements = [
+                [[kronecker_delta(i, k) * (self.elements[k-1][i-1][j-1])**(-1) for j in range(1, self.n + 1)] for i in range(1, self.m + 1)]
+                for k in range(1, self.o + 1)
+        ]
+
+        I_elements = [
+                [[kronecker_delta(i, k) for j in range(1, self.n + 1)] for i in range(1, self.m + 1)]
+                for k in range(1, self.o + 1)
+        ]
+
+        return (Cubriz(I_elements), Cubriz(J_elements))
 
 def kronecker_delta(a, b):
     return float(a == b)
@@ -81,26 +187,6 @@ def d_ij_cubrix(n):
             for k in range(1, n + 1)
     ])
 
-def d_jk_cubrix(n):
-    return Cubriz([
-            [[kronecker_delta(j, k) for j in range(1, n + 1)] for i in range(1, n + 1)]
-            for k in range(1, n + 1)
-    ])
-
-def d_ik_cubrix(n):
-    return Cubriz([
-            [[kronecker_delta(i, k) for j in range(1, n + 1)] for i in range(1, n + 1)]
-            for k in range(1, n + 1)
-    ])
-
-AIX = d_ij_cubrix(2)
-IAX = d_ij_cubrix(2)
-IXA = d_jk_cubrix(2)
-
-AXJ = d_jk_cubrix(2)
-XAJ = d_ik_cubrix(2)
-XJA = d_ik_cubrix(2)
-
 A = Cubriz([
     [[6.0, 8.0],
      [4.0, 2.0]],
@@ -109,76 +195,40 @@ A = Cubriz([
      [5.0, 4.0]]
 ])
 
-B = Cubriz([
-    [[20.0, 40.0],
-     [80.0, 160.0]],
-
-    [[320.0, 640.0],
-     [640.0, 640.0]]
-])
-
 print("A:")
 A.print()
 
-(A_ij, d_ij) = A.inverse_ij()
-(A_jk, d_jk) = A.inverse_jk()
-(A_ik, d_ik) = A.inverse_ik()
+(I_ij1, J_ij1) = A.inverse_AIJ_ij()
+(I_jk1, J_jk1) = A.inverse_AIJ_jk()
+(I_ik1, J_ik1) = A.inverse_AIJ_ik()
 
-print("IJ")
+print("AIJ sobre ij")
+A.times(I_ij1, J_ij1).print()
 
-print("A * Aij * dij")
-A.times(A_ij, d_ij).print()
-print("A * dij * Aij")
-A.times(d_ij, A_ij).print()
+print("AIJ sobre jk")
+A.times(I_jk1, J_jk1).print()
 
-print("Aij * A * dij")
-A_ij.times(A, d_ij).print()
-print("Aij * dij * A")
-A_ij.times(d_ij, A).print()
+print("AIJ sobre ik (NO FUNCIONA)")
+A.times(I_ik1, J_ik1).print()
 
-print("dij * Aij * A")
-d_ij.times(A_ij, A).print()
-print("dij * A * Aij")
-d_ij.times(A, A_ij).print()
+(I_ij2, J_ij2) = A.inverse_IAJ_ij()
+(I_jk2, J_jk2) = A.inverse_IAJ_jk()
+(I_ik2, J_ik2) = A.inverse_IAJ_ik()
 
-print("IK")
-print("A * Aik * dik")
-A.times(A_ik, d_ik).print()
-print("A * dik * Aik")
-A.times(d_ik, A_ik).print()
-print("Aik * A * dik")
-A_ik.times(A, d_ik).print()
-print("Aik * dik * A")
-A_ik.times(d_ik, A).print()
-print("dik * A * Aik")
-d_ik.times(A, A_ik).print()
-print("dik * Aik * A")
-d_ik.times(A_ik, A).print()
+print("IAJ sobre ij")
+I_ij2.times(A, J_ij2).print()
+print("IAJ sobre jk (NO FUNCIONA)")
+I_jk2.times(A, J_jk2).print()
+print("IAJ sobre ik")
+I_ik2.times(A, J_ik2).print()
 
-print("------")
-print("JK")
+(I_ij3, J_ij3) = A.inverse_IJA_ij()
+(I_jk3, J_jk3) = A.inverse_IJA_jk()
+(I_ik3, J_ik3) = A.inverse_IJA_ik()
 
-print("A * Ajk * djk")
-A.times(A_jk, d_jk).print()
-
-print("***************** A * Aij * dij")
-A.times(A_ij, d_ij).print()
-
-print("A * djk * Ajk")
-A.times(d_jk, A_jk).print()
-
-print("Ajk * A * djk")
-A_jk.times(A, d_jk).print()
-print("Ajk * djk * A")
-A_jk.times(d_jk, A).print()
-
-print("djk * A * Ajk")
-d_jk.times(A, A_jk).print()
-
-print("djk * Ajk * A")
-d_jk.times(A_jk, A).print()
-
-print("------")
-
-print("A * Aij * B")
-A.times(A_ij, B).print()
+print("IJA sobre ij (NO FUNCIONA)")
+I_ij3.times(J_ij3, A).print()
+print("IJA sobre jk")
+I_jk3.times(J_jk3, A).print()
+print("IJA sobre ik")
+I_ik3.times(J_ik3, A).print()
