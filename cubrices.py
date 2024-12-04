@@ -220,14 +220,39 @@ def print_expansion(A):
 
                 print(f"B_{i}{j}{k} = delta_{i}{k} = {int(i == k)} =", product)
 
-(I_ik1, J_ik1) = A.inverse_AIJ_ik()
-print("AIJ sobre ik")
-A.times(I_ik1, J_ik1).print()
 
-(I_jk2, J_jk2) = A.inverse_IAJ_jk()
-print("IAJ sobre jk")
-I_jk2.times(A, J_jk2).print()
+(I1, J1) = A.inverse_AIJ_ij()
+(I2, J2) = A.inverse_AIJ_jk()
+(I3, J3) = A.inverse_AIJ_ik()
 
-(I_ij3, J_ij3) = A.inverse_IJA_ij()
-print("IJA sobre ij")
-I_ij3.times(J_ij3, A).print()
+(I4, J4) = A.inverse_IAJ_ij()
+(I5, J5) = A.inverse_IAJ_jk()
+(I6, J6) = A.inverse_IAJ_ik()
+
+(I7, J7) = A.inverse_IJA_ij()
+(I8, J8) = A.inverse_IJA_jk()
+(I9, J9) = A.inverse_IJA_ik()
+
+print("Pares inversa sobre ij:")
+print("AIJ:")
+A.times(I1, J1).print()
+print("IAJ:")
+I4.times(A, J4).print()
+print("IJA:")
+I7.times(J7, A).print()
+
+print("Pares inversa sobre jk:")
+print("AIJ:")
+A.times(I2, J2).print()
+print("IAJ:")
+I5.times(A, J5).print()
+print("IJA:")
+I8.times(J8, A).print()
+
+print("Pares inversa sobre ik:")
+print("AIJ:")
+A.times(I3, J3).print()
+print("IAJ:")
+I6.times(A, J6).print()
+print("IJA:")
+I9.times(J9, A).print()
