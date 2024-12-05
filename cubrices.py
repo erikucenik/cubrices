@@ -1,6 +1,6 @@
 # M_oxmxn
 #  Slice Filas Columnas
-# m[k]   [i]   [j]
+# A[k]   [i]   [j]
 class Cubriz:
     o: int
     m: int
@@ -12,6 +12,40 @@ class Cubriz:
         self.o = len(elements)
         self.m = len(elements[0])
         self.n = len(elements[0][0])
+
+    def __add__(self, other):
+        if isinstance(other, float) or isinstance(other, int):
+            return Cubriz([
+                [[self.elements[k-1][i-1][j-1] + other for j in range(1, self.n + 1)] for i in range(1, self.m + 1)]
+                for k in range(1, self.o + 1)
+            ])
+        elif isinstance(other, Cubriz):
+            return Cubriz([
+                [[self.elements[k-1][i-1][j-1] + other.elements[k-1][i-1][j-1] for j in range(1, self.n + 1)] for i in range(1, self.m + 1)]
+                for k in range(1, self.o + 1)
+            ])
+        else:
+            pass
+
+    def __mul__(self, other):
+        if isinstance(other, float) or isinstance(other, int):
+            return Cubriz([
+                [[other * self.elements[k-1][i-1][j-1] for j in range(1, self.n + 1)] for i in range(1, self.m + 1)]
+                for k in range(1, self.o + 1)
+            ]) 
+        else:
+            pass
+
+    def __pow__(self, exponent):
+        return Cubriz([
+                [[(self.elements[k-1][i-1][j-1])**(exponent) for j in range(1, self.n + 1)] for i in range(1, self.m + 1)]
+                for k in range(1, self.o + 1)
+        ])
+
+        return Cubriz(elements)
+
+    __radd__ = __add__
+    __rmul__ = __mul__
 
     def print(self):
         for i in range(1, self.m + 1):
@@ -46,12 +80,12 @@ class Cubriz:
         assert self.m == self.n == self.o
 
         I_elements = [
-                [[kronecker_delta(i, j) * (self.elements[k-1][i-1][j-1])**(-1) for j in range(1, self.n + 1)] for i in range(1, self.m + 1)]
+                [[d(i, j) * (self.elements[k-1][i-1][j-1])**(-1) for j in range(1, self.n + 1)] for i in range(1, self.m + 1)]
                 for k in range(1, self.o + 1)
         ]
 
         J_elements = [
-                [[kronecker_delta(i, j) for j in range(1, self.n + 1)] for i in range(1, self.m + 1)]
+                [[d(i, j) for j in range(1, self.n + 1)] for i in range(1, self.m + 1)]
                 for k in range(1, self.o + 1)
         ]
 
@@ -182,9 +216,24 @@ class Cubriz:
 def kronecker_delta(a, b):
     return float(a == b)
 
+def d(a, b):
+    return kronecker_delta(a, b)
+
+def I(n):
+    return Cubriz([
+            [[1.0] for i in range(1, n + 1)]
+            for k in range(1, n + 1)
+    ])
+    
 def d_ij_cubrix(n):
     return Cubriz([
             [[kronecker_delta(i, j) for j in range(1, n + 1)] for i in range(1, n + 1)]
+            for k in range(1, n + 1)
+    ])
+
+def d_ik_cubrix(n):
+    return Cubriz([
+            [[kronecker_delta(i, k) for j in range(1, n + 1)] for i in range(1, n + 1)]
             for k in range(1, n + 1)
     ])
 
@@ -196,7 +245,7 @@ A2 = Cubriz([
      [5.0, 4.0]]
 ])
 
-A = Cubriz([
+A3 = Cubriz([
     [[6.0, 8.0, 4.0],
      [2.0, 7.0, 7.0],
      [2.0, 7.0, 1.0]],
@@ -210,6 +259,7 @@ A = Cubriz([
      [7.0, 80.0, 9.0]]
 ])
 
+"""
 def print_expansion(A):
     for i in range(A.m):
         for j in range(A.n):
@@ -219,40 +269,67 @@ def print_expansion(A):
                     product += f" + A_{i}{l}{k} I_{l}{j}{k} J_{i}{j}{l}"
 
                 print(f"B_{i}{j}{k} = delta_{i}{k} = {int(i == k)} =", product)
+def D(n):
+    return Cubriz([
+            [[d(i, j) * d(j, k) for j in range(1, n + 1)] for i in range(1, n + 1)]
+            for k in range(1, n + 1)
+    ])
 
+def AI(A):
+    return Cubriz([
+        [[A.elements[k-1][k-1][k-1]**(-1) for j in range(1, A.n + 1)] for i in range(1, A.n + 1)]
+        for k in range(1, A.n + 1)
+    ])
 
-(I1, J1) = A.inverse_AIJ_ij()
-(I2, J2) = A.inverse_AIJ_jk()
-(I3, J3) = A.inverse_AIJ_ik()
+#def AJ(n):
+#    return Cubriz([
+#        [[d(i, k) for j in range(1, n + 1)] for i in range(1, n + 1)]
+#        for k in range(1, n + 1)
+#    ])
 
-(I4, J4) = A.inverse_IAJ_ij()
-(I5, J5) = A.inverse_IAJ_jk()
-(I6, J6) = A.inverse_IAJ_ik()
+def AJ(n):
+    return Cubriz([
+        [[d(i, k) for j in range(1, n + 1)] for i in range(1, n + 1)]
+        for k in range(1, n + 1)
+    ])
 
-(I7, J7) = A.inverse_IJA_ij()
-(I8, J8) = A.inverse_IJA_jk()
-(I9, J9) = A.inverse_IJA_ik()
+for i in range(1, A.n + 1):
+    for j in range(1, A.n + 1):
+        for k in range(1, A.n + 1):
+            txt = f"B_{i}{j}{k} = d_{i}{k} = {d(i, k)} = "
+            for l in range(1, A.n + 1):
+                txt += f"+ A_{i}{l}{k} (d_{l}{k} A_{l}{l}{l}^-1) d_{i}{l} "
 
-print("Pares inversa sobre ij:")
-print("AIJ:")
-A.times(I1, J1).print()
-print("IAJ:")
-I4.times(A, J4).print()
-print("IJA:")
-I7.times(J7, A).print()
+            print(txt)
+for i in range(1, A.n + 1):
+    for j in range(1, A.n + 1):
+        for k in range(1, A.n + 1):
+            txt = f"d_{i}{k} = {d(i, k)} = "
+            for l in range(1, A.n + 1):
+                #txt += f"+ A_{i}{l}{k} A_{l}{l}{l}^-1 (d_{l}{k} d_{i}{l})"
+                txt += f"+ A_{i}{l}{k} A_{l}{l}{l}^-1 (d_{l}{k} d_{i}{l})"
 
-print("Pares inversa sobre jk:")
-print("AIJ:")
-A.times(I2, J2).print()
-print("IAJ:")
-I5.times(A, J5).print()
-print("IJA:")
-I8.times(J8, A).print()
+            print(txt)
 
-print("Pares inversa sobre ik:")
-print("AIJ:")
-A.times(I3, J3).print()
-print("IAJ:")
-I6.times(A, J6).print()
-print("IJA:")
-I9.times(J9, A).print()
+A_inverse_k = AI(A)
+d_ik = d_ik_cubrix(2)
+
+for n in range(0, 2**8):
+    elements = [
+            [[],
+             []],
+
+            [[],
+             []]
+    ]
+
+    for k in range(1, 3):
+        for i in range(1, 3):
+            for j in range(1, 3):
+                number = format(n, '#010b')[2:10]
+                cell = float(number[4*(k-1) + 2*(i-1) + j-1])
+                elements[k-1][i-1].append(cell)
+
+    I = A_inverse_k
+    J = Cubriz(elements)
+"""
