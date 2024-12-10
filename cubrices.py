@@ -6,6 +6,11 @@ class Cubrix:
     A class used to represent Cubrices: mathematical objects described
     in Erik's paper (see https://github.com/erikucenik/cubrices-paper).
 
+    Note that there's no explicit method for getting identity pairs.
+    One must generate the I matrix and choose the specific Kronecker
+    Cubrix for the particular product order and desired resulting
+    Kronecker.
+
     m, n, o : int
         The dimensions of the Cubrix. They must lie in [1, k].
         m is the number of rows.
@@ -121,6 +126,14 @@ class Cubrix:
 
         return s
 
+    def __str__(self) -> str:
+        """
+        Returns the two-dimensional representation of the Cubrix with
+        its elements rounded up to 2 decimal places.
+        """
+        return self.to_str(2)
+
+
     def print(self, decimal_positions: int) -> None:
         """
         Prints the Cubrix string representation rounded up to
@@ -155,8 +168,8 @@ class Cubrix:
 
     def times(self, B: "Cubrix", C: "Cubrix") -> "Cubrix":
         """
-        Returns the product of self, B and C. The same constraints are
-        applied as in the paper.
+        Returns the product of self, B and C (in that order). The same
+        constraints are applied as in the paper.
         """
 
         assert self.n == B.m
