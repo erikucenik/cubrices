@@ -1,9 +1,6 @@
 from typing import Callable
 from random import uniform
 
-# M_oxmxn
-# Slice  Row   Column
-# A[k]   [i]   [j]
 class Cubrix:
     """
     A class used to represent Cubrices: mathematical objects described
@@ -125,6 +122,11 @@ class Cubrix:
         return s
 
     def print(self, decimal_positions: int) -> None:
+        """
+        Prints the Cubrix string representation rounded up to
+        as many positions as specified by decimal_positions.
+        """
+
         print(self.to_str(decimal_positions))
 
     def inverse_pair(self) -> tuple["Cubrix", "Cubrix"]:
@@ -170,34 +172,31 @@ class Cubrix:
         ])
 
 
-"""Kronecker delta"""
 def d(a: float | int, b: float | int) -> float:
+    """Kronecker delta."""
     return float(a == b)
     
-
-"""
-The following functions provide some useful cubic Cubrices to work with.
-All of them receive n as their size.
-    - All of the ones starting with D represent a Kronecker cubrix.
-    - I is the cubrix composed by only 1.0s.
-    - random generates a Cubrix composed of random floats ranging from
-      lower to upper.
-"""
-
 def D_ij(n: int) -> "Cubrix":
+    """Generates a cubic Kronecker Cubrix of size n over i, j."""
     return Cubrix.from_function(n, lambda i, j, k: d(i, j))
 
 def D_jk(n: int) -> "Cubrix":
+    """Generates a cubic Kronecker Cubrix of size n over j, k."""
     return Cubrix.from_function(n, lambda i, j, k: d(j, k))
 
 def D_ik(n: int) -> "Cubrix":
+    """Generates a cubic Kronecker Cubrix of size n over i, k."""
     return Cubrix.from_function(n, lambda i, j, k: d(i, k))
 
 def D(n: int) -> "Cubrix":
+    """Generates a cubic Kronecker Cubrix of size n over i, j, k."""
     return Cubrix.from_function(n, lambda i, j, k: d(i, j) * d(j, k))
 
 def I(n: int) -> "Cubrix":
+    """Generates a cubic Cubrix of size n composed by just 1.0s."""
     return Cubrix.from_function(n, lambda i, j, k: 1.0)
 
 def random(n: int, lower: float, upper: float) -> "Cubrix":
+    """Generates a cubic Cubrix of size n composed of random floats
+    ranging from lower to upper."""
     return Cubrix.from_function(n, lambda i, j, k: uniform(lower, upper))
