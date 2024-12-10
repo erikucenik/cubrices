@@ -3,7 +3,7 @@ import cubrices
 # n is the size of the cubic cubrices.
 n = 3
 
-# Generates n-sized cubrices with random digits ranging from 0 to 9.
+# Cubrix generators
 A = cubrices.random(n, 0.0, 9.0)
 B = cubrices.random(n, 0.0, 9.0)
 
